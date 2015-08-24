@@ -35,6 +35,7 @@ def gen_connection():
         conn['ssh'] = _ask_str('SSH options', '-i ~/.ssh/id_rsa root@localhost')
     conn['channels'] = _ask_list('Alfred Channels', [158, 159])
     conn['socket'] = _ask_str('Alfred Socket Path', '/var/run/alfred.sock')
+    conn['sudo'] = _ask_bool('Run with sudo', False)
 
     return conn
 
