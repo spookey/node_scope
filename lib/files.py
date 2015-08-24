@@ -1,6 +1,6 @@
-from os import path
 from codecs import open as c_open
-from json import loads, dumps
+from json import dumps, loads
+from os import path
 
 
 def readfile(location):

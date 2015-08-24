@@ -1,10 +1,12 @@
 from copy import deepcopy
+from datetime import datetime
 from os import makedirs, path
 from shlex import split as l_split
 from subprocess import PIPE, Popen
 
 BASEDIR = path.abspath(path.dirname(path.dirname(__file__)))
 CONFIG = path.join(BASEDIR, 'config.json')
+RAW_ALFRED = path.join(BASEDIR, 'alfred_raw.json')
 
 DATADIR = path.join(BASEDIR, 'data')
 
@@ -35,3 +37,7 @@ def merge(di, ct):
             deepcopy(ct[key])
         )
     return res
+
+
+def timestamp():
+    return (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()

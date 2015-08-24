@@ -1,5 +1,7 @@
 from json import loads
-from lib.common import shell, merge
+
+from lib.common import RAW_ALFRED, merge, shell
+from lib.files import writejson
 
 
 def _alfred(conn):
@@ -30,13 +32,13 @@ def query(conn):
                 data = loads(out)
                 if data is not None:
                     curr = merge(curr, data)
-                    return curr, data
+                    return curr
             except ValueError as ex:
                 print('ERROR: {}'.format(ex))
 
     res = {}
     for cmdline in _alfred(conn):
-        res, raw = _ask(res, cmdline)
-        print(len(raw))
-
+        res = _ask(res, cmdline)
+    if conn['keep']:
+        writejson(RAW_ALFRED, res)
     return res
