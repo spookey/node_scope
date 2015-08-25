@@ -22,7 +22,5 @@ def push():
     )
 
     code, out, err = shell(cmd)
-    if code == 0:
-        print('ok:', out, err)
-    else:
+    if code != 0:
         print('ERROR:', err)
