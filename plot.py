@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from lib.pull import pull
+from lib.plot import plot
 
 if __name__ == '__main__':
-    pull()
+    plot()

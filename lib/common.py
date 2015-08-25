@@ -41,3 +41,7 @@ def merge(di, ct):
 
 def timestamp():
     return (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()
+
+
+def ts_dt(ts):
+    return datetime.utcfromtimestamp(ts)

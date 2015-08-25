@@ -1,0 +1,86 @@
+from fnmatch import fnmatch
+from os import listdir, path
+from string import ascii_lowercase
+from pygal import DateTimeLine
+from lib.common import DATADIR, ts_dt
+from lib.files import readjson
+
+
+class PlotNode:
+    def __init__(self, data):
+        self.hostname = data['hostname']
+        self.name = ''.join(
+            c for c in self.hostname.lower() if
+            c in (ascii_lowercase + '_' + '-' + '.')
+        )
+        self.data = {}
+
+        for ts in sorted(data['log']):
+            for field in sorted(data['log'][ts]):
+                self.data[field] = self.data.get(field, [])
+                self.data[field].append((
+                    ts_dt(float(ts)),
+                    data['log'][ts][field]
+                ))
+
+    def _plot(self):
+        plot = DateTimeLine(
+            legend_at_bottom=True,
+            title=self.hostname,
+            x_label_rotation=35,
+            x_value_formatter=lambda dt: dt.strftime('%Y.%m.%d %H:%M:%S')
+        )
+        return plot
+
+    def clients(self):
+        plot = self._plot()
+        plot.x_title = 'Clients'
+        plot.add('WiFi', self.data['clients_wifi'])
+        plot.add('Total', self.data['clients_total'])
+        return plot
+
+    def traffic(self):
+        plot = self._plot()
+        plot.x_title = 'Traffic'
+        plot.add('RX', self.data['traffic_rx'])
+        plot.add('TX', self.data['traffic_tx'])
+        return plot
+
+    def traffic_full(self):
+        plot = self.traffic()
+        plot.x_title = 'Traffic (full)'
+        plot.add('Forward', self.data['traffic_forward'])
+        plot.add('Management RX', self.data['traffic_mgmt_rx'])
+        plot.add('Management TX', self.data['traffic_mgmt_tx'])
+        return plot
+
+    def summary(self):
+        plot = self._plot()
+        plot.x_title = 'Summary'
+        plot.add('RX', self.data['traffic_rx'])
+        plot.add('TX', self.data['traffic_tx'])
+        plot.add('Clients', self.data['clients_total'])
+        plot.add('Load', self.data['load_avg'])
+        return plot
+
+
+def _load():
+    for jf in listdir(DATADIR):
+        if fnmatch(jf, '*.json'):
+            data = readjson(path.join(DATADIR, jf))
+            yield PlotNode(data)
+
+
+def plot():
+    def save(name, graph, field):
+        graph.render_to_file(
+            path.join(DATADIR, '{}_{}.svg'.format(
+                name, field
+            ))
+        )
+
+    for node in _load():
+        save(node.name, node.clients(), 'clients')
+        save(node.name, node.summary(), 'summary')
+        save(node.name, node.traffic(), 'traffic')
+        save(node.name, node.traffic_full(), 'traffic_full')
