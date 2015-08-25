@@ -1,7 +1,9 @@
 from fnmatch import fnmatch
 from os import listdir, path
 from string import ascii_lowercase
+
 from pygal import DateTimeLine
+
 from lib.common import DATADIR, ts_dt
 from lib.files import readjson
 
@@ -74,9 +76,7 @@ def _load():
 def plot():
     def save(name, graph, field):
         graph.render_to_file(
-            path.join(DATADIR, '{}_{}.svg'.format(
-                name, field
-            ))
+            path.join(DATADIR, '{}_{}.svg'.format(name, field))
         )
 
     for node in _load():

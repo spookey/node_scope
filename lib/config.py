@@ -49,6 +49,19 @@ def gen_targets():
     return _ask_list('Exact Hostnames or MACs of nodes to watch', ['node'])
 
 
+def gen_upload():
+    upld = {}
+    upld['ssh'] = _ask_str(
+        'SSH options',
+        '-i ~/.ssh/id_rsa root@localhost'
+    )
+    upld['folder'] = _ask_str(
+        'Target folder',
+        '~/target'
+    )
+    return upld
+
+
 def load():
     conf = readjson(CONFIG)
     if not conf:
@@ -57,6 +70,8 @@ def load():
         conf['connection'] = gen_connection()
     if not conf.get('targets'):
         conf['targets'] = gen_targets()
+    if not conf.get('upload'):
+        conf['upload'] = gen_upload()
 
     writejson(CONFIG, conf)
     return conf
