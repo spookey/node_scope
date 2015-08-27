@@ -25,25 +25,24 @@ class PlotNode:
                     data['log'][ts][field]
                 ))
 
-    def _plot(self):
+    def _plot(self, x_title):
         plot = DateTimeLine(
             legend_at_bottom=True,
             title=self.hostname,
             x_label_rotation=35,
             x_value_formatter=lambda dt: dt.strftime('%Y.%m.%d %H:%M:%S')
         )
+        plot.x_title = x_title
         return plot
 
     def clients(self):
-        plot = self._plot()
-        plot.x_title = 'Clients'
+        plot = self._plot('Clients')
         plot.add('WiFi', self.data['clients_wifi'])
         plot.add('Total', self.data['clients_total'])
         return plot
 
     def traffic(self):
-        plot = self._plot()
-        plot.x_title = 'Traffic'
+        plot = self._plot('Traffic')
         plot.add('RX', self.data['traffic_rx'])
         plot.add('TX', self.data['traffic_tx'])
         return plot
@@ -56,12 +55,8 @@ class PlotNode:
         plot.add('Management TX', self.data['traffic_mgmt_tx'])
         return plot
 
-    def summary(self):
-        plot = self._plot()
-        plot.x_title = 'Summary'
-        plot.add('RX', self.data['traffic_rx'])
-        plot.add('TX', self.data['traffic_tx'])
-        plot.add('Clients', self.data['clients_total'])
+    def system(self):
+        plot = self._plot('System')
         plot.add('Load', self.data['load_avg'])
         return plot
 
@@ -81,6 +76,6 @@ def plot():
 
     for node in _load():
         save(node.name, node.clients(), 'clients')
-        save(node.name, node.summary(), 'summary')
+        save(node.name, node.system(), 'system')
         save(node.name, node.traffic(), 'traffic')
         save(node.name, node.traffic_full(), 'traffic_full')

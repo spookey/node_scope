@@ -18,19 +18,19 @@ def store(now, data):
         node['hostname'] = data.get('hostname')
 
         node['log'][now] = {}
-        node['log'][now]['load_avg'] = data.get('loadavg', 0.0)
-        node['log'][now]['clients_total'] = clients.get('total', 0)
-        node['log'][now]['clients_wifi'] = clients.get('wifi', 0)
-        node['log'][now]['traffic_rx'] = traffic.get('rx', {}).get('bytes', 0)
-        node['log'][now]['traffic_tx'] = traffic.get('tx', {}).get('bytes', 0)
+        node['log'][now]['load_avg'] = data.get('loadavg')
+        node['log'][now]['clients_total'] = clients.get('total')
+        node['log'][now]['clients_wifi'] = clients.get('wifi')
+        node['log'][now]['traffic_rx'] = traffic.get('rx', {}).get('bytes')
+        node['log'][now]['traffic_tx'] = traffic.get('tx', {}).get('bytes')
         node['log'][now][
             'traffic_forward'
-        ] = traffic.get('forward', {}).get('bytes', 0)
+        ] = traffic.get('forward', {}).get('bytes')
         node['log'][now][
             'traffic_mgmt_rx'
-        ] = traffic.get('mgmt_tx', {}).get('bytes', 0)
+        ] = traffic.get('mgmt_tx', {}).get('bytes')
         node['log'][now][
             'traffic_mgmt_tx'
-        ] = traffic.get('mgmt_tx', {}).get('bytes', 0)
+        ] = traffic.get('mgmt_tx', {}).get('bytes')
 
         return writejson(loc, node)
