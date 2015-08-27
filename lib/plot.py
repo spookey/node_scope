@@ -2,7 +2,7 @@ from fnmatch import fnmatch
 from os import listdir, path
 from string import ascii_lowercase, digits
 
-from pygal import DateTimeLine, Treemap
+from pygal import DateTimeLine, Treemap, Pie
 
 from lib.common import DATADIR, ts_dt
 from lib.files import readjson
@@ -78,9 +78,9 @@ def plot():
         comp.add(node.hostname, [d[-1] for d in node.data[field]])
         return comp
 
-    compare_clients = Treemap()
-    compare_traffic_rx = Treemap()
-    compare_traffic_tx = Treemap()
+    tree_clients, pie_clients = Treemap(), Pie()
+    tree_traffic_rx, pie_traffic_rx = Treemap(), Pie()
+    tree_traffic_tx, pie_traffic_tx = Treemap(), Pie()
 
     for node in _load():
         save(node.name, node.clients(), 'clients')
@@ -88,6 +88,11 @@ def plot():
         save(node.name, node.traffic(), 'traffic')
         save(node.name, node.traffic_full(), 'traffic_full')
 
-        save('', _cmp(compare_clients, node, 'clients_total'), 'clients')
-        save('', _cmp(compare_traffic_rx, node, 'traffic_rx'), 'traffic_rx')
-        save('', _cmp(compare_traffic_tx, node, 'traffic_tx'), 'traffic_tx')
+        save('_map', _cmp(tree_clients, node, 'clients_total'), 'clients')
+        save('_pie', _cmp(pie_clients, node, 'clients_total'), 'clients')
+
+        save('_map', _cmp(tree_traffic_rx, node, 'traffic_rx'), 'traffic_rx')
+        save('_pie', _cmp(pie_traffic_rx, node, 'traffic_rx'), 'traffic_rx')
+
+        save('_map', _cmp(tree_traffic_tx, node, 'traffic_tx'), 'traffic_tx')
+        save('_pie', _cmp(pie_traffic_tx, node, 'traffic_tx'), 'traffic_tx')
