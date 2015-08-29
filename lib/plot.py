@@ -61,19 +61,39 @@ class PlotNode:
         return plot
 
 
+def save(name, graph, field):
+    graph.render_to_file(
+        path.join(DATADIR, '{}_{}.svg'.format(name, field))
+    )
+
+
 def _load():
+    sdata = {
+        'log': {},
+        'hostname': '_sum'
+    }
+
     for jf in listdir(DATADIR):
         if fnmatch(jf, '*.json'):
             data = readjson(path.join(DATADIR, jf))
             yield PlotNode(data)
 
+            for ts in data['log']:
+
+                sdata['log'][ts] = sdata['log'].get(ts, {})
+                for field in data['log'][ts]:
+                    dt = data['log'][ts][field]
+                    sdata['log'][ts][field] = sdata['log'][ts].get(field, 0)
+                    if dt is not None:
+                        sdata['log'][ts][field] += dt
+
+    sum_node = PlotNode(sdata)
+    save(sum_node.name, sum_node.clients(), 'clients')
+    save(sum_node.name, sum_node.traffic(), 'traffic')
+    save(sum_node.name, sum_node.traffic_full(), 'traffic_full')
+
 
 def plot():
-    def save(name, graph, field):
-        graph.render_to_file(
-            path.join(DATADIR, '{}_{}.svg'.format(name, field))
-        )
-
     def _cmp(comp, node, field):
         comp.add(node.hostname, [d[-1] for d in node.data[field]])
         return comp
