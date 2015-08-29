@@ -34,7 +34,7 @@ def gen_connection():
     conn = {}
     if _ask_bool('Use SSH', False):
         conn['ssh'] = _ask_str(
-            'SSH options',
+            'SSH options to query Alfred',
             '-i ~/.ssh/id_rsa root@localhost'
         )
     conn['channels'] = _ask_list('Alfred Channels', [158, 159])
@@ -52,7 +52,7 @@ def gen_targets():
 def gen_upload():
     upld = {}
     upld['ssh'] = _ask_str(
-        'SSH options',
+        'SSH options to upload plots',
         '-i ~/.ssh/id_rsa root@localhost'
     )
     upld['folder'] = _ask_str(
