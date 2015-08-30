@@ -70,7 +70,7 @@ def save(name, graph, field):
 def _load():
     sdata = {
         'log': {},
-        'hostname': '_sum'
+        'hostname': 'Summary'
     }
 
     for jf in listdir(DATADIR):
@@ -88,9 +88,9 @@ def _load():
                         sdata['log'][ts][field] += dt
 
     sum_node = PlotNode(sdata)
-    save(sum_node.name, sum_node.clients(), 'clients')
-    save(sum_node.name, sum_node.traffic(), 'traffic')
-    save(sum_node.name, sum_node.traffic_full(), 'traffic_full')
+    save('_sum', sum_node.clients(), 'clients')
+    save('_sum', sum_node.traffic(), 'traffic')
+    save('_sum', sum_node.traffic_full(), 'traffic_full')
 
 
 def plot():
