@@ -1,5 +1,5 @@
-node_scope
-##########
+scope_mon
+#########
 
 This tool is a quick and dirty hack, don't expect too much..
 
